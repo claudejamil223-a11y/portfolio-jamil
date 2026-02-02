@@ -2,11 +2,12 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { getGeminiChatResponse } from '../services/geminiService';
 import { Message } from '../types';
+import { PORTFOLIO_OWNER } from '../constants';
 
 const AIChat: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState<Message[]>([
-    { role: 'model', text: 'Hi! I am Alex\'s AI assistant. Ask me anything about their work or skills!' }
+    { role: 'model', text: `Hi! I am ${PORTFOLIO_OWNER.name.split(' ')[0]}'s AI assistant. Ask me anything about my work or skills!` }
   ]);
   const [inputValue, setInputValue] = useState('');
   const [isTyping, setIsTyping] = useState(false);
@@ -39,7 +40,7 @@ const AIChat: React.FC = () => {
           <div className="bg-indigo-600 p-4 flex justify-between items-center">
             <div className="flex items-center gap-3">
               <div className="w-8 h-8 rounded-full bg-indigo-400 flex items-center justify-center font-bold text-xs">AI</div>
-              <span className="font-semibold">Alex's Assistant</span>
+              <span className="font-semibold">{PORTFOLIO_OWNER.name.split(' ')[0]}'s Assistant</span>
             </div>
             <button onClick={() => setIsOpen(false)} className="text-white/60 hover:text-white">
               <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg>

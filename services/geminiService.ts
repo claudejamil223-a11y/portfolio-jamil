@@ -1,9 +1,17 @@
 
 import { GoogleGenAI } from "@google/genai";
-import { PORTFOLIO_OWNER, PROJECTS, SKILLS } from "../constants";
+import { PORTFOLIO_OWNER, PROJECTS, SKILLS } from "../constants.tsx";
 
-// The API key must be obtained exclusively from process.env.API_KEY
-const ai = new GoogleGenAI({ apiKey: process.env.API_KEY || '' });
+// Utilisation d'une vérification sécurisée pour process.env
+const getApiKey = () => {
+  try {
+    return process.env.API_KEY || '';
+  } catch (e) {
+    return '';
+  }
+};
+
+const ai = new GoogleGenAI({ apiKey: getApiKey() });
 
 const SYSTEM_INSTRUCTION = `
 You are the advanced AI assistant for ${PORTFOLIO_OWNER.name}, a ${PORTFOLIO_OWNER.title}.
@@ -27,9 +35,12 @@ Behavioral Guidelines:
 `;
 
 export const getGeminiChatResponse = async (userMessage: string, history: { role: 'user' | 'model', text: string }[]) => {
+  const apiKey = getApiKey();
+  if (!apiKey) {
+    return "I'm currently in 'offline' mode because the API key is not configured. Please contact Jamil to enable the AI features!";
+  }
+
   try {
-    // We use generateContent with the full conversation history to maintain context
-    // using the high-performance gemini-3-pro-preview model.
     const response = await ai.models.generateContent({
       model: 'gemini-3-pro-preview',
       contents: [

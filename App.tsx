@@ -1,54 +1,43 @@
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import Navbar from './components/Navbar.tsx';
 import Hero from './components/Hero.tsx';
 import Projects from './components/Projects.tsx';
 import Skills from './components/Skills.tsx';
 import Contact from './components/Contact.tsx';
 import Footer from './components/Footer.tsx';
+import AIChat from './components/AIChat.tsx';
+import Experiences from './components/Experiences.tsx';
+import Certifications from './components/Certifications.tsx';
+import Education from './components/Education.tsx';
 
 const App: React.FC = () => {
-  const [activeSection, setActiveSection] = useState('home');
+  const [currentPage, setCurrentPage] = useState('home');
 
-  useEffect(() => {
-    const handleScroll = () => {
-      const sections = ['home', 'projects', 'skills', 'contact'];
-      const scrollPosition = window.scrollY + 100;
-
-      for (const section of sections) {
-        const element = document.getElementById(section);
-        if (element && scrollPosition >= element.offsetTop && scrollPosition < element.offsetTop + element.offsetHeight) {
-          setActiveSection(section);
-        }
-      }
-    };
-
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
+  const renderPage = () => {
+    switch(currentPage) {
+      case 'home': return <Hero onNavigate={setCurrentPage} />;
+      case 'education': return <Education />;
+      case 'experience': return <Experiences />;
+      case 'projects': return <Projects />;
+      case 'certifications': return <Certifications />;
+      case 'skills': return <Skills />;
+      case 'contact': return <Contact />;
+      default: return <Hero onNavigate={setCurrentPage} />;
+    }
+  };
 
   return (
-    <div className="min-h-screen selection:bg-indigo-500/30">
-      <Navbar activeSection={activeSection} />
+    <div className="min-h-screen bg-slate-950 selection:bg-indigo-500/30">
+      <Navbar currentPage={currentPage} onNavigate={setCurrentPage} />
       
-      <main>
-        <section id="home">
-          <Hero />
-        </section>
-
-        <section id="projects" className="py-24 px-6 md:px-12 lg:px-24">
-          <Projects />
-        </section>
-
-        <section id="skills" className="py-24 px-6 md:px-12 lg:px-24 bg-slate-900/50">
-          <Skills />
-        </section>
-
-        <section id="contact" className="py-24 px-6 md:px-12 lg:px-24">
-          <Contact />
-        </section>
+      <main className="pt-24 pb-20 px-6 md:px-12 lg:px-24">
+        <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
+          {renderPage()}
+        </div>
       </main>
 
+      <AIChat />
       <Footer />
     </div>
   );
